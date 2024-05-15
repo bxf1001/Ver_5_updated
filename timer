@@ -1,0 +1,38 @@
+import sys
+from PyQt5.QtCore import QTimer, Qt
+from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
+
+def start_timer(minutes):
+    seconds = minutes * 60
+    timer = QTimer()
+    timer.setInterval(1000)  # Timer interval in milliseconds (1000 ms = 1 second)
+    timer.timeout.connect(lambda: update_label_text(timer, label))
+    timer.start()
+
+def update_label_text(timer, label):
+    remaining_time = timer.remainingTime() / 1000  # Remaining time in seconds
+    if remaining_time <= 0:
+        timer.stop()
+        label.setText("Timer expired!")
+    else:
+        minutes = remaining_time // 60
+        seconds = remaining_time % 60
+        label.setText(f"Time remaining: {int(minutes)} minutes {int(seconds)} seconds")
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    
+    widget = QWidget()
+    layout = QVBoxLayout()
+    widget.setLayout(layout)
+    
+    label = QLabel("Waiting for timer to expire...")
+    layout.addWidget(label)
+    
+    minutes = 10  # Set the duration of the timer in minutes
+    
+    start_timer(minutes)
+    
+    widget.show()
+    
+    sys.exit(app.exec_())
